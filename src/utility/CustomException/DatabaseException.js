@@ -1,0 +1,11 @@
+const ERROR_CODE = require('./ErrorCodes')
+class DatabaseException extends Error {
+    constructor (errorCode, errorMessage, status) {
+        super(errorMessage)
+        this.name = this.constructor.name
+        this.status = status || 500
+        this.errorCode = errorCode || ERROR_CODE.DATABASE_ERROR
+        this.errorMessage = errorMessage || 'Database Exception'
+    }
+}
+module.exports = DatabaseException
