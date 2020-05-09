@@ -7,10 +7,11 @@ async function loginAuthentication(loginCredentials) {
         let response = await loginQuery.getUserByNameAndType(loginCredentials)
         if (response) {
             if (pwd.validatePassword(loginCredentials.password, response.password)) {
-                if (!response.email_verified) {
-                    loginCredentials.resetPasswordRequired = true
-                }
-                loginCredentials.user_id  = response.user_id
+                loginCredentials.resetPasswordRequired = response.email_verified ? false : true
+                loginCredentials.user_id = response.user_id
+                loginCredentials.email_id = response.email_id
+                delete loginCredentials.password
+                delete loginCredentials.user_type
                 return loginCredentials
             }
             return exception.PasswordInvalidException
