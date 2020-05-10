@@ -1,9 +1,9 @@
 const connection = require('../../utility/GetDbConnection')
 
-function saveNewPassword(details) {
+function saveNewPassword(password, user_id) {
     return new Promise(function (resolve, reject) {
         var query = `UPDATE SKILL_MATRIX.user_details set password = ? WHERE user_id =?`
-        connection.query(query, [details.password, details.user_id], function (err, result) {
+        connection.query(query, [password, user_id], function (err, result) {
             if (err) return reject(err)
             resolve(result.affectedRows)
         })
@@ -54,10 +54,10 @@ function saveOtp(user_id, otp) {
     })
 }
 
-function getUserByUserIdAndOtp(details) {
+function getUserByUserIdAndOtp(userId,otp) {
     return new Promise(function (resolve, reject) {
         let query = `SELECT * from SKILL_MATRIX.user_details where user_id = ? and otp =?`
-        connection.query(query, [details.user_id, details.otp], function (err, rows, fields) {
+        connection.query(query, [userId, otp], function (err, rows, fields) {
             if (err) {
                 return reject(err)
             }

@@ -6,7 +6,7 @@ const OTP = require('../../utility/GenerateOtp')
 
 async function forceResetPassword(request) {
     try {
-        let affectedRowsPassword = await updatePassword(request)
+        let affectedRowsPassword = await updatePassword(request.password, request.user_id)
         let affectedRowsEmailStatus
         if (affectedRowsPassword == 1) {
             affectedRowsEmailStatus = await passwordQuery.setEmailVerifiedStatus(request.user_id)
@@ -21,7 +21,7 @@ async function forceResetPassword(request) {
 
 async function resetPassword(request) {
     try {
-        let affectedRows = await updatePassword(request)
+        let affectedRows = await updatePassword(request.password, request.user_id)
         if (affectedRows == 1) {
             return { resetPasswordSuccesful: true }
         }
@@ -55,11 +55,9 @@ async function forgotPasswordInitiate(request) {
 
 async function forgotPasswordComplete(request) {
     try {
-        let response = await passwordQuery.getUserByUserIdAndOtp(request)
+        let response = await passwordQuery.getUserByUserIdAndOtp(request.user_id,request.otp)
         if (response) {
-            request.password = pwd.encodePassword(request.password)
-            request.user_id = response.user_id
-            let affectedRows = await passwordQuery.saveNewPassword(request)
+            let affectedRows = await updatePassword(request.password, request.user_id)
             await passwordQuery.saveOtp(request.user_id, null)
             if (affectedRows == 1) {
                 return { resetPasswordSuccesful: true }
@@ -74,10 +72,11 @@ async function forgotPasswordComplete(request) {
     }
 }
 
-async function updatePassword(details) {
-    details.password = pwd.encodePassword(details.password)
-    return await passwordQuery.saveNewPassword(details)
+async function updatePassword(password, user_id) {
+    password = pwd.encodePassword(password)
+    return await passwordQuery.saveNewPassword(password, user_id)
 }
+
 function sendMail(toMailId, otp) {
     mailer.sendMail(toMailId, 'Skill Matrix - Password Reset', `Your OTP to reset the password is ${otp}`)
 }

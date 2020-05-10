@@ -2,17 +2,15 @@ const loginQuery = require('./LoginQuery')
 const exception = require('../../utility/CustomException')
 const pwd = require('../../utility/PasswordManager')
 
-async function loginAuthentication(loginCredentials) {
+async function loginAuthentication(request) {
     try {
-        let response = await loginQuery.getUserByNameAndType(loginCredentials)
+        let response = await loginQuery.getUserByNameAndType(request.username,request.user_type)
         if (response) {
-            if (pwd.validatePassword(loginCredentials.password, response.password)) {
-                loginCredentials.resetPasswordRequired = response.email_verified ? false : true
-                loginCredentials.user_id = response.user_id
-                loginCredentials.email_id = response.email_id
-                delete loginCredentials.password
-                delete loginCredentials.user_type
-                return loginCredentials
+            if (pwd.validatePassword(request.password, response.password)) {
+                response.email_verified = response.email_verified == 0 ? false : true
+                delete response.password
+                delete response.user_type
+                return response
             }
             return exception.PasswordInvalidException
         }

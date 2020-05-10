@@ -3,14 +3,14 @@ const exception = require('../../utility/CustomException')
 const pwd = require('../../utility/PasswordManager')
 const mailer = require('../../utility/Mailer')
 
-async function register(registrationDetails) {
+async function register(request) {
     try {
-        if (await isUserNameEligibleForRegistration(registrationDetails.username)) {
-            let password = registrationDetails.password
-            registrationDetails = buildRegistrationDetails(registrationDetails)
-            let affectedRows = await registrationQuery.saveUserDetails(registrationDetails)
+        if (await isUserNameEligibleForRegistration(request.username)) {
+            let password = request.password
+            request = buildRegistrationDetails(request)
+            let affectedRows = await registrationQuery.saveUserDetails(request)
             if (affectedRows == 1) {
-                sendMail(registrationDetails.email_id, password, registrationDetails.username)
+                sendMail(request.email_id, password, request.username)
                 return {registrationSuccesful : true}
             } else {
                 return { registrationSuccesful: false }
@@ -29,12 +29,12 @@ function sendMail(toMailId, password, userName) {
     mailer.sendMail(toMailId, 'Test', `${password}\n${userName}`)
 }
 
-function buildRegistrationDetails(registrationDetails) {
-    registrationDetails.password = pwd.encodePassword(registrationDetails.password)
-    registrationDetails.email_verified = registrationDetails.email_verified || 0
-    registrationDetails.created_by = registrationDetails.created_by || 'Admin'
-    registrationDetails.user_type = registrationDetails.user_type || 'User'
-    return registrationDetails
+function buildRegistrationDetails(request) {
+    request.password = pwd.encodePassword(request.password)
+    request.email_verified = request.email_verified || 0
+    request.created_by = request.created_by || 'Admin'
+    request.user_type = request.user_type || 'User'
+    return request
 }
 
 async function isUserNameEligibleForRegistration(userName) {

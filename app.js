@@ -9,9 +9,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/login', routes.login);
-app.use('/register', routes.registration);
+app.use('/admin/register', routes.registration);
 app.use('/password', routes.password);
+app.use('/profile', routes.profile);
+
 
 app.listen(process.env.APPLICATION_PORT, () =>
-  console.log(`Example app listening on port ${process.env.APPLICATION_PORT}!`),
+  console.log(`Skill-matrix app listening on port ${process.env.APPLICATION_PORT}!`),
 );
