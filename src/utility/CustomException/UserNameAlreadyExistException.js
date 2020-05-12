@@ -1,6 +1,6 @@
 const ERROR_CODE = require('./ErrorCodes')
 class UserNameAlreadyExistException extends Error {
-    constructor (errorCode, errorMessage, status) {
+    constructor(errorCode, errorMessage, status) {
         super(errorMessage)
         this.name = this.constructor.name
         this.status = status || 403

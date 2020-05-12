@@ -1,8 +1,13 @@
 const login = require('./modules/login')
-const registration = require('./modules/registration')
-
+const admin = require('./modules/admin')
+const password = require('./modules/password')
+const profile = require('./modules/profile')
+const render = require('./modules/render')
 
 module.exports = {
   login,
-  registration,
+  admin,
+  password,
+  profile,
+  render,
 };
