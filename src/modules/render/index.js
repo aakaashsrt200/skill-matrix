@@ -5,7 +5,15 @@ const skillService = require('./skill/SkillService')
 const userService = require('./user/UserService')
 
 router.get('/domain', async (req, res) => {
-    let response = await domainService.getAllDomain(req.body)
+    let response = await domainService.getAllDomain()
+    if (response instanceof Error) {
+        res.status(response.status || 500)
+    }
+    res.json(response)
+})
+
+router.get('/domain-skill', async (req, res) => {
+    let response = await domainService.getDomainAndSkill()
     if (response instanceof Error) {
         res.status(response.status || 500)
     }

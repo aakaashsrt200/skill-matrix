@@ -3,6 +3,8 @@ const exception = require('../../utility/CustomException')
 const pwd = require('../../utility/PasswordManager')
 const mailer = require('../../utility/Mailer')
 const OTP = require('../../utility/GenerateOtp')
+const fs = require('fs')
+
 
 async function forceResetPassword(request) {
     try {
@@ -78,10 +80,14 @@ async function updatePassword(password, user_id) {
 }
 
 function sendMail(toMailId, otp) {
-
-    let sub = 'Skill Matrix : OTP to reset password'
-    let html = `<h4>Hi, </h4><h4>Your OTP to rest your password is ${otp}.</h4><h5>Regards,</h5><h5>Team Cervello</h5>`
-    mailer.sendMail(toMailId, sub, null ,html)
+    fs.readFile('./ResetPasswordMail.txt', 'utf8', function (err, data) {
+        if (err) {
+            console.log(err);
+        }
+        let sub = 'Skill Matrix : OTP to reset password'
+        data = data.replace('{OTP}', otp)
+        mailer.sendMail(toMailId, sub, null, data)
+    })
 }
 
 module.exports = {
