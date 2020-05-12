@@ -1,9 +1,8 @@
-const connection = require('../../utility/GetDbConnection')
 
 function saveNewPassword(password, user_id) {
     return new Promise(function (resolve, reject) {
         var query = `UPDATE SKILL_MATRIX.user_details set password = ? WHERE user_id =?`
-        connection.query(query, [password, user_id], function (err, result) {
+        db.query(query, [password, user_id], function (err, result) {
             if (err) return reject(err)
             resolve(result.affectedRows)
         })
@@ -13,7 +12,7 @@ function saveNewPassword(password, user_id) {
 function setEmailVerifiedStatus(user_id) {
     return new Promise(function (resolve, reject) {
         var query = `UPDATE SKILL_MATRIX.user_details set email_verified = ? WHERE user_id =?`
-        connection.query(query, [true, user_id], function (err, result) {
+        db.query(query, [true, user_id], function (err, result) {
             if (err) return reject(err)
             resolve(result.affectedRows)
         })
@@ -23,7 +22,7 @@ function setEmailVerifiedStatus(user_id) {
 function getUserByUserId(userId) {
     return new Promise(function (resolve, reject) {
         let query = `SELECT * from login_service_details where user_id = ?`
-        connection.query(query, [userId], function (err, rows, fields) {
+        db.query(query, [userId], function (err, rows, fields) {
             if (err) {
                 return reject(err)
             }
@@ -35,7 +34,7 @@ function getUserByUserId(userId) {
 function getUserByUserName(userName) {
     return new Promise(function (resolve, reject) {
         let query = `SELECT * from login_service_details where username = ?`
-        connection.query(query, [userName], function (err, rows, fields) {
+        db.query(query, [userName], function (err, rows, fields) {
             if (err) {
                 return reject(err)
             }
@@ -47,7 +46,7 @@ function getUserByUserName(userName) {
 function saveOtp(user_id, otp) {
     return new Promise(function (resolve, reject) {
         var query = `UPDATE SKILL_MATRIX.user_details set otp = ? WHERE user_id =?`
-        connection.query(query, [otp, user_id], function (err, result) {
+        db.query(query, [otp, user_id], function (err, result) {
             if (err) return reject(err)
             resolve(result.affectedRows)
         })
@@ -57,7 +56,7 @@ function saveOtp(user_id, otp) {
 function getUserByUserIdAndOtp(userId,otp) {
     return new Promise(function (resolve, reject) {
         let query = `SELECT * from SKILL_MATRIX.user_details where user_id = ? and otp =?`
-        connection.query(query, [userId, otp], function (err, rows, fields) {
+        db.query(query, [userId, otp], function (err, rows, fields) {
             if (err) {
                 return reject(err)
             }

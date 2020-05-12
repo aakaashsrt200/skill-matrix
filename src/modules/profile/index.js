@@ -18,4 +18,12 @@ router.post('/edit', async (req, res) => {
     res.json(response)
 })
 
+router.post('/dp/upload', async (req, res) => {
+    let response = await profileService.uploadDp(req.body,req.files)
+    if (response instanceof Error) {
+        res.status(response.status || 500)
+    }
+    res.json(response)
+})
+
 module.exports = router

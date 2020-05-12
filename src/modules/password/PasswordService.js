@@ -55,7 +55,7 @@ async function forgotPasswordInitiate(request) {
 
 async function forgotPasswordComplete(request) {
     try {
-        let response = await passwordQuery.getUserByUserIdAndOtp(request.user_id,request.otp)
+        let response = await passwordQuery.getUserByUserIdAndOtp(request.user_id, request.otp)
         if (response) {
             let affectedRows = await updatePassword(request.password, request.user_id)
             await passwordQuery.saveOtp(request.user_id, null)
@@ -78,7 +78,10 @@ async function updatePassword(password, user_id) {
 }
 
 function sendMail(toMailId, otp) {
-    mailer.sendMail(toMailId, 'Skill Matrix - Password Reset', `Your OTP to reset the password is ${otp}`)
+
+    let sub = 'Skill Matrix : OTP to reset password'
+    let html = `<h4>Hi, </h4><h4>Your OTP to rest your password is ${otp}.</h4><h5>Regards,</h5><h5>Team Cervello</h5>`
+    mailer.sendMail(toMailId, sub, null ,html)
 }
 
 module.exports = {
