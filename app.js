@@ -5,14 +5,8 @@ const routes = require('./src/routes.js')
 const connection = require('./src/utility/GetDbConnection')
 require('dotenv').config()
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/login', routes.login);
-app.use('/admin/register', routes.registration);
-app.use('/password', routes.password);
-app.use('/profile', routes.profile);
+var fileupload = require("express-fileupload");
+app.use(fileupload());
 
 app.use(cors())
 app.use(express.json())
