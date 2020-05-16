@@ -13,7 +13,7 @@ router.get('/domain', async (req, res) => {
 })
 
 router.get('/domain-skill', async (req, res) => {
-    let response = await domainService.getDomainAndSkill()
+    let response = await domainService.getDomainAndSkill(req.query.user_id)
     if (response instanceof Error) {
         res.status(response.status || 500)
     }
@@ -21,7 +21,7 @@ router.get('/domain-skill', async (req, res) => {
 })
 
 router.get('/skill', async (req, res) => {
-    let response = await skillService.getSkill(req.query.domain)
+    let response = await skillService.getSkill(req.query.domain,req.query.user_id)
     if (response instanceof Error) {
         res.status(response.status || 500)
     }

@@ -12,10 +12,11 @@ function getAllDomain () {
     })
 }
 
-function getSkillByDomainRef (domainRef) {
+function getSkillByDomainRef (domainRef,userId) {
+    console.log(domainRef,userId)
     return new Promise(function (resolve, reject) {
-        let query = `SELECT * from SKILL_MATRIX.skills where domain = ?`
-        db.query(query, [domainRef] ,function (err, rows, fields) {
+        let query = `SELECT A.SKILL, A.SKILL_ID FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL = B.SKILL WHERE B.SKILL IS NULL AND A.DOMAIN='${domainRef}';`
+        db.query(query,function (err, rows, fields) {
             if (err) {
                 return reject(err)
             }

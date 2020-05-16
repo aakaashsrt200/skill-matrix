@@ -17,9 +17,9 @@ async function getAllDomain() {
     }
 }
 
-async function getDomainAndSkill() {
+async function getDomainAndSkill(userId) {
     try {
-        let result = await domainQuery.getAll()
+        let result = await domainQuery.getAll(userId)
         
         return {list:result}
     }

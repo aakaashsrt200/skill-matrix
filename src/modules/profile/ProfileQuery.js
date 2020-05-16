@@ -13,8 +13,9 @@ function getUserByUserId(userId) {
  
 function saveUserDetails(details) {
     return new Promise(function (resolve, reject) {
-        var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?, first_name = ?, last_name = ?, phone_number = ?, practice = ?, coe = ?, designation_role = ?, profile_link = ?     WHERE user_id =?`        
-        db.query(query, [details.bio_description,details.first_name,details.last_name,details.phone_number,details.practice,details.coe,details.designation_role,details.profile_link,details.user_id], function (err, result) {
+        console.log(details)
+        var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?, first_name = ?, last_name = ?, phone_number = ?, practice = ?, coe = ?, designation_role = ?, profile_link = ?, dp_url = ?  WHERE user_id =?`        
+        db.query(query, [details.bio_description,details.first_name,details.last_name,details.phone_number,details.practice,details.coe,details.designation_role,details.profile_link,details.dp_url,details.user_id], function (err, result) {
             if (err) {
                 return reject(err)
             }
