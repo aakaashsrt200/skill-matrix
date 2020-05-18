@@ -1,7 +1,7 @@
 const domainQuery = require('./DomainQuery')
 const exception = require('../../../utility/CustomException')
 
-async function getAllDomain(request) {
+async function getAllDomain() {
     try {
         let result = await domainQuery.getAllDomain()
         console.log(result)
@@ -17,6 +17,19 @@ async function getAllDomain(request) {
     }
 }
 
+async function getDomainAndSkill(userId) {
+    try {
+        let result = await domainQuery.getAll(userId)
+        
+        return {list:result}
+    }
+    catch (e) {
+        console.error(e)
+        return exception.DatabaseException
+    }
+}
+
 module.exports = {
     getAllDomain,
+    getDomainAndSkill
 }

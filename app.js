@@ -17,6 +17,7 @@ app.use('/admin', routes.admin)
 app.use('/password', routes.password)
 app.use('/profile', routes.profile)
 app.use('/get', routes.render)
+app.use('/skill', routes.skill)
 app.use(express.static('public'))
 
 app.listen(process.env.APPLICATION_PORT, () =>

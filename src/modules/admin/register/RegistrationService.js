@@ -2,6 +2,7 @@ const registrationQuery = require('./RegistrationQuery')
 const exception = require('../../../utility/CustomException')
 const pwd = require('../../../utility/PasswordManager')
 const mailer = require('../../../utility/Mailer')
+var fs = require('fs');
 
 async function register(request) {
     try {
@@ -11,7 +12,7 @@ async function register(request) {
             let affectedRows = await registrationQuery.saveUserDetails(request)
             if (affectedRows == 1) {
                 sendMail(request.email_id, password, request.username)
-                return {registrationSuccesful : true}
+                return { registrationSuccesful: true }
             } else {
                 return { registrationSuccesful: false }
             }
@@ -26,9 +27,15 @@ async function register(request) {
 }
 
 function sendMail(toMailId, password, userName) {
-    let sub = 'Welcome to Cervello Skill Matrix!'
-    let html = `<h4>Hi, </h4><h4>Your account for Cervello Skill Matrix has been created.Kindly login to the portal by clicking on the link using the below credentials.</h4><h5>Username : ${userName}</h5><h5>Password : ${password}</h5><h5>Url: <a href="https://www.google.com/">www.google.com</a></h5><h5>Regards,</h5><h5>Team Cervello</h5>`
-    mailer.sendMail(toMailId, sub, null,html)
+    fs.readFile('./RegistrationMail.txt', 'utf8', function (err, data) {
+        if (err) {
+            console.log(err)
+        }
+        let sub = 'Welcome to Cervello Skill Matrix!'
+        data = data.replace('{PASSWORD}', password).replace('{USERNAME}', userName)
+        mailer.sendMail(toMailId, sub, null, data)
+    });
+
 }
 
 function buildRegistrationDetails(request) {

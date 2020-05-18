@@ -3,6 +3,7 @@ const admin = require('./modules/admin')
 const password = require('./modules/password')
 const profile = require('./modules/profile')
 const render = require('./modules/render')
+const skill = require('./modules/skill')
 
 module.exports = {
   login,
@@ -10,4 +11,5 @@ module.exports = {
   password,
   profile,
   render,
+  skill,
 };

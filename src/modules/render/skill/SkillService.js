@@ -1,13 +1,14 @@
 const domainQuery = require('./SkillQuery')
 const exception = require('../../../utility/CustomException')
 
-async function getSkill(domainRef) {
+async function getSkill(domainRef,userId) {
     try {
-        let result = await domainQuery.getSkillByDomainRef(domainRef)
+        let result = await domainQuery.getSkillByDomainRef(domainRef,userId)
+        console.log('result',result)
         let skillList = []
         for (let skill of result) {
-            skillList.push({ name: skill.skill,
-                id : skill.skill_id })
+            skillList.push({ name: skill.SKILL,
+                id : skill.SKILL_ID })
         }
         return { skill: skillList }
     }

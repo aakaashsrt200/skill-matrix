@@ -1,6 +1,7 @@
 const profileQuery = require('./ProfileQuery')
 const exception = require('../../utility/CustomException')
 const pwd = require('../../utility/PasswordManager')
+require('dotenv').config()
 
 async function getProfile(user_id) {
     try {
@@ -16,8 +17,11 @@ async function getProfile(user_id) {
     }
 }
 
-async function editProfile(request) {
+async function editProfile(request, attachments) {
     try {
+        let dpUrl = await saveProfilePictureAndGetURL(attachments, request.user_id)
+        request.dp_url = dpUrl ? dpUrl : request.profile_picture_url
+        //request.dp_url = dpUrl
         let affectedRows = await profileQuery.saveUserDetails(request)
         if (affectedRows == 1) {
             let response = await profileQuery.getUserByUserId(request.user_id)
@@ -31,26 +35,34 @@ async function editProfile(request) {
     }
 }
 
+async function saveProfilePictureAndGetURL(attachments, userId) {
+    if (attachments) {
+        let file = attachments.pic
+        let fileExt = file.mimetype === 'jpg' ? 'jpg' : 'png'
+        let fileName = `profile_pic_${userId}.${fileExt}`
+        let dpUrl = `${process.env.APPLICATION_HOST_URL}:${process.env.APPLICATION_PORT}/${fileName}`
+        file.mv(`./public/${fileName}`)
+        return dpUrl
+    }
+
+}
+
 async function uploadDp(request, attachments) {
     try {
-        console.log(attachments)
-        if (!attachments) {
-            res.send(exception.UserIdInvalidException)
-        } else {
-            let file = attachments.pic
-            let fileExt = file.mimetype === 'jpg' ? 'jpg' : 'png'
-            let fileName = `profile_pic_${request.user_id}.${fileExt}`
-            let dpUrl = `http://localhost:3000/${fileName}`
-            file.mv(`./public/${fileName}`)
-            let affectedRows = await profileQuery.updateDp(request.user_id, dpUrl)
-            if (affectedRows == 1) {
-                return {
-                    dpUploadedSuccessfuly: true,
-                    url : dpUrl
-                }
-            }
-            return exception.UserIdInvalidException
+
+        let dpUrl = await saveProfilePictureAndGetURL(attachments, request.user_id)
+        if (!dpUrl) {
+            return exception.UserIdInvalidException//No attachments
         }
+        let affectedRows = await profileQuery.updateDp(request.user_id, dpUrl)
+        if (affectedRows == 1) {
+            return {
+                dpUploadedSuccessfuly: true,
+                url: dpUrl
+            }
+        }
+        return exception.UserIdInvalidException
+
     }
     catch (e) {
         console.error(e)
