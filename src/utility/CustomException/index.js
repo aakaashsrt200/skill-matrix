@@ -4,12 +4,17 @@ const UserNameAlreadyExistException = require('./UserNameAlreadyExistException')
 const DatabaseException = require('./DatabaseException')
 const OtpInvalidException = require('./OtpInvalidException')
 const UserIdInvalidException = require('./UserIdInvalidException')
-
+const InternalServerException = require('./InternalServerException')
+const InvalidSkillIdException = require('./InvalidSkillIdException')
+const ApiKeyInvalidException = require('./ApiKeyInvalidException')
 module.exports = {
-    UserNameInvalidException: new UserNameInvalidException(),
-    PasswordInvalidException: new PasswordInvalidException(),
-    UserNameAlreadyExistException: new UserNameAlreadyExistException(),
-    DatabaseException: new DatabaseException(),
-    OtpInvalidException: new OtpInvalidException(),
-    UserIdInvalidException: new UserIdInvalidException()
+	UserNameInvalidException: new UserNameInvalidException(),
+	PasswordInvalidException: new PasswordInvalidException(),
+	UserNameAlreadyExistException: new UserNameAlreadyExistException(),
+	DatabaseException: new DatabaseException(),
+	OtpInvalidException: new OtpInvalidException(),
+	UserIdInvalidException: new UserIdInvalidException(),
+	InternalServerException: new InternalServerException(),
+	InvalidSkillIdException: new InvalidSkillIdException(),
+	ApiKeyInvalidException: new ApiKeyInvalidException(),
 }
