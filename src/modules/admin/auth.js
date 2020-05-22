@@ -3,6 +3,7 @@ const exception = require('../../utility/CustomException')
 const pwd = require('../../utility/PasswordManager')
 const mailer = require('../../utility/Mailer')
 const fs = require('fs')
+const path = require('path')
 
 async function login(request) {
 	try {
@@ -41,7 +42,7 @@ async function register(request) {
 }
 
 function sendMail(toMailId, password, userName) {
-	fs.readFile('./RegistrationMail.txt', 'utf8', function (err, data) {
+	fs.readFile(path.join(rootPath, '/src/repository/resource/RegistrationMail.txt'), 'utf8', function (err, data) {
 		if (err) {
 			console.log(err)
 		}

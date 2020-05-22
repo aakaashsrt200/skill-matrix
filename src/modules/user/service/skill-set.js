@@ -26,9 +26,10 @@ async function getSkill(domainRef, userId) {
 			result = await query.getSkillByDomainRefAndUserId(domainRef, userId)
 		} else {
 			result = await query.getSkillByDomainRef(domainRef)
+			console.log(result)
 		}
 		let skillList = []
-		if (result.length > 1) {
+		if (result.length > 0) {
 			for (let skill of result) {
 				skillList.push({
 					name: skill.skill,
@@ -78,7 +79,7 @@ async function addUserSkill(request) {
 	try {
 		let details = []
 		for (let skill of request.skills) {
-			details.push([request.user_id, skill.domain, skill.skill, skill.rating])
+			details.push([request.user_id, skill.skill_id, skill.rating])
 		}
 		await query.insertUserSkills(details)
 		return { status: true }
@@ -91,8 +92,8 @@ async function addUserSkill(request) {
 async function deleteUserSkill(request) {
 	try {
 		let details = []
-		for (let skill of request.skills) {
-			details.push([request.user_id, skill.domain, skill.skill])
+		for (let skill_id of request.skills) {
+			details.push([request.user_id, skill_id])
 		}
 		let affectedRows = await query.deleteUserSkills(details)
 		if (affectedRows > 0) {
@@ -109,10 +110,10 @@ async function alterUserSkill(request) {
 	try {
 		let qList = []
 		for (let skill of request.skills) {
-			var q = `UPDATE SKILL_MATRIX.user_skills set rating = ${skill.rating} WHERE user_id = ${request.user_id} and skill = '${skill.skill}'`
+			var q = `UPDATE SKILL_MATRIX.user_skills set rating = ${skill.rating} WHERE user_id = ${request.user_id} and skill_id = '${skill.skill_id}'`
 			qList.push(q)
 		}
-		let affectedRows = await query.alterUserSkills(qList.join(';'))
+		let affectedRows = await query.runCustomQuery(qList.join(';'))
 		if (affectedRows > 0) {
 			return { status: true }
 		}

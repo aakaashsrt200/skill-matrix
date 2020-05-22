@@ -4,6 +4,7 @@ const pwd = require('../../../utility/PasswordManager')
 const mailer = require('../../../utility/Mailer')
 const OTP = require('../../../utility/GenerateOtp')
 const fs = require('fs')
+const path = require('path')
 
 async function forceResetPassword(request) {
 	try {
@@ -64,9 +65,11 @@ async function updatePassword(password, user_id) {
 	password = pwd.encodePassword(password)
 	return await query.saveNewPassword(password, user_id)
 }
-
 function sendMail(toMailId, otp) {
-	fs.readFile('./ResetPasswordMail.txt', 'utf8', function (err, data) {
+	fs.readFile(path.join(rootPath, '/src/repository/resource/ResetPasswordMail.txt'), 'utf8', function (
+		err,
+		data
+	) {
 		if (err) {
 			console.log(err)
 		}

@@ -47,6 +47,14 @@ router.post('/auth/password/forgot/complete', async (req, res) => {
 })
 
 //User profile related
+router.get('/profile/edit', async (req, res) => {
+	let response = await profile.getProfileForEdit(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
 router.get('/profile', async (req, res) => {
 	let response = await profile.getProfile(req.query.user_id)
 	if (response instanceof Error) {

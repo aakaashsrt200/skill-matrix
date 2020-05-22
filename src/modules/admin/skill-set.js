@@ -18,8 +18,8 @@ async function addSkill(request) {
 async function deleteSkill(request) {
 	try {
 		let details = []
-		for (let skill of request.skills) {
-			details.push([skill.domain, skill.skill])
+		for (let skillId of request.skills) {
+			details.push([skillId])
 		}
 		let affectedRows = await query.deleteSkills(details)
 		if (affectedRows > 0) {
@@ -33,7 +33,34 @@ async function deleteSkill(request) {
 	}
 }
 
+async function getDomainAndSkill() {
+	try {
+		let result = await query.getDomainAndSkill()
+		return { list: result }
+	} catch (e) {
+		console.error(e)
+		return exception.InternalServerException
+	}
+}
+
+async function editSkill(request) {
+	try {
+		let qList = []
+		for (let skill of request.skills) {
+			var q = `UPDATE SKILL_MATRIX.skills set skill = '${skill.skill}', domain = '${skill.domain}' WHERE skill_id = ${skill.skill_id}`
+			qList.push(q)
+		}
+		await query.runCustomQuery(qList.join(';'))
+		return { status: true }
+	} catch (e) {
+		console.error(e)
+		return exception.InternalServerException
+	}
+}
+
 module.exports = {
 	addSkill,
 	deleteSkill,
+	getDomainAndSkill,
+	editSkill,
 }

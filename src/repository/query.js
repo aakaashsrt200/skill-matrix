@@ -1,6 +1,6 @@
 function getUserByNameAndType(userName, userType) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from login_service_details where username = ? and user_type = ?`
+		let query = `SELECT * from vw_login_service_details where username = ? and user_type = ?`
 		db.query(query, [userName, userType], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -32,7 +32,7 @@ function setEmailVerifiedStatus(user_id) {
 
 function saveUserDetails(details) {
 	return new Promise(function (resolve, reject) {
-		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?, first_name = ?, last_name = ?, phone_number = ?, practice = ?, coe = ?, designation_role = ?, profile_link = ?, dp_url = ?  WHERE user_id =?`
+		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?,first_name = ?, last_name = ?, phone_number = ?, coe_id = ?, designation_role_id = ?, education_id = ?, profile_link = ?, dp_url = ?  WHERE user_id =?;`
 		db.query(
 			query,
 			[
@@ -40,9 +40,9 @@ function saveUserDetails(details) {
 				details.first_name,
 				details.last_name,
 				details.phone_number,
-				details.practice,
-				details.coe,
-				details.designation_role,
+				details.coe_id,
+				details.designation_role_id,
+				details.education_id,
 				details.profile_link,
 				details.dp_url,
 				details.user_id,
@@ -71,7 +71,7 @@ function updateDp(user_id, dpUrl) {
 
 function getUserByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from login_service_details where user_id = ?`
+		let query = `SELECT * from user_details where user_id = ?`
 		db.query(query, [userId], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -80,10 +80,22 @@ function getUserByUserId(userId) {
 		})
 	})
 }
+function getUserProfileForEditByUserId(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `select * from  skill_matrix.vw_profile_service_details a, skill_matrix.vw_lang_desig_coe_edu_concat b where a.user_id = ?;`
+		db.query(query, [userId], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			console.log(rows[0])
+			resolve(rows[0])
+		})
+	})
+}
 
 function getUserByUserName(userName) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from login_service_details where username = ?`
+		let query = `SELECT * from vw_login_service_details where username = ?`
 		db.query(query, [userName], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -137,7 +149,7 @@ function registerUserDetails(details) {
 
 function getUserProfileByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from profile_service_details where user_id = ?`
+		let query = `SELECT * from vw_profile_service_details where user_id = ?`
 		db.query(query, [userId], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -149,7 +161,7 @@ function getUserProfileByUserId(userId) {
 
 function getAllDomain() {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from domain_list`
+		let query = `SELECT * from vw_domain_list`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -161,7 +173,7 @@ function getAllDomain() {
 
 function getDomainByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT distinct A.domain FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL = B.SKILL WHERE B.SKILL IS NULL;`
+		let query = `SELECT DISTINCT A.domain FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL_ID = B.SKILL_ID WHERE B.SKILL_ID IS NULL;`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -173,7 +185,7 @@ function getDomainByUserId(userId) {
 
 function getDomainAndSkillByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT A.domain, A.skill, A.skill_id FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL = B.SKILL WHERE B.SKILL IS NULL;`
+		let query = `SELECT A.domain, A.skill, A.skill_id FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL_ID = B.SKILL_ID WHERE B.SKILL_ID IS NULL;`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -197,7 +209,7 @@ function getDomainAndSkill() {
 
 function getSkillByDomainRefAndUserId(domainRef, userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT A.skill, A.skill_id FROM SKILL_MATRIX.skills A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL = B.SKILL WHERE B.SKILL IS NULL AND A.DOMAIN='${domainRef}';`
+		let query = `SELECT A.skill, A.skill_id FROM SKILL_MATRIX.skills A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL_ID = B.SKILL_ID WHERE B.SKILL_ID IS NULL AND A.DOMAIN='${domainRef}';`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -209,7 +221,7 @@ function getSkillByDomainRefAndUserId(domainRef, userId) {
 
 function getSkillByDomainRef(domainRef) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT skill FROM SKILL_MATRIX.skills where domain = '${domainRef}';`
+		let query = `SELECT skill_id, skill FROM SKILL_MATRIX.skills where domain = '${domainRef}';`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -221,7 +233,7 @@ function getSkillByDomainRef(domainRef) {
 
 function getSkillByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from user_skill_list where user_id = ?`
+		let query = `SELECT * from vw_user_skills_transaction where user_id = ?`
 		db.query(query, [userId], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -233,7 +245,7 @@ function getSkillByUserId(userId) {
 
 function insertUserSkills(details) {
 	return new Promise(function (resolve, reject) {
-		let query = `INSERT INTO SKILL_MATRIX.user_skills (user_id, domain, skill, rating) VALUES ?;`
+		let query = `INSERT INTO SKILL_MATRIX.user_skills (user_id, skill_id, rating) VALUES ?;`
 		db.query(query, [details], function (err, result) {
 			if (err) {
 				return reject(err)
@@ -245,7 +257,7 @@ function insertUserSkills(details) {
 
 function deleteUserSkills(details) {
 	return new Promise(function (resolve, reject) {
-		let query = `DELETE FROM SKILL_MATRIX.user_skills WHERE (user_id, domain, skill) IN (?);`
+		let query = `DELETE FROM SKILL_MATRIX.user_skills WHERE (user_id,skill_id) IN (?);`
 		db.query(query, [details], function (err, result) {
 			if (err) {
 				return reject(err)
@@ -257,7 +269,7 @@ function deleteUserSkills(details) {
 
 function deleteUserSkillsBySkill(details) {
 	return new Promise(function (resolve, reject) {
-		let query = `DELETE FROM SKILL_MATRIX.user_skills WHERE (domain, skill) IN (?);`
+		let query = `DELETE FROM SKILL_MATRIX.user_skills WHERE (skill_id) IN (?);`
 		db.query(query, [details], function (err, result) {
 			if (err) {
 				return reject(err)
@@ -267,7 +279,7 @@ function deleteUserSkillsBySkill(details) {
 	})
 }
 
-function alterUserSkills(query) {
+function runCustomQuery(query) {
 	return new Promise(function (resolve, reject) {
 		db.query(query, function (err, result) {
 			if (err) {
@@ -292,7 +304,7 @@ function addSkills(details) {
 
 function deleteSkills(details) {
 	return new Promise(function (resolve, reject) {
-		let query = `DELETE FROM SKILL_MATRIX.skills WHERE (domain, skill) IN (?);`
+		let query = `DELETE FROM SKILL_MATRIX.skills WHERE (skill_id) IN (?);`
 		db.query(query, [details], function (err, result) {
 			if (err) {
 				return reject(err)
@@ -307,6 +319,7 @@ module.exports = {
 	saveNewPassword,
 	setEmailVerifiedStatus,
 	getUserByUserId,
+	getUserProfileForEditByUserId,
 	getUserByUserName,
 	saveUserDetails,
 	updateDp,
@@ -324,7 +337,7 @@ module.exports = {
 	insertUserSkills,
 	deleteUserSkills,
 	deleteUserSkillsBySkill,
-	alterUserSkills,
+	runCustomQuery,
 	addSkills,
 	deleteSkills,
 }

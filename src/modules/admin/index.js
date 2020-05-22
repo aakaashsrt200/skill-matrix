@@ -26,7 +26,13 @@ router.get('/profile', async (req, res) => {})
 router.post('/profile/edit', async (req, res) => {})
 
 //Skill related
-router.get('/skill-set', async (req, res) => {})
+router.get('/skill-set/all', async (req, res) => {
+	let response = await skillSet.getDomainAndSkill()
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
 router.post('/skill-set/skill/add', async (req, res) => {
 	let response = await skillSet.addSkill(req.body)
@@ -44,7 +50,13 @@ router.post('/skill-set/skill/delete', async (req, res) => {
 	res.json(response)
 })
 
-router.post('/skill-set/skill/edit', async (req, res) => {})
+router.post('/skill-set/skill/edit', async (req, res) => {
+	let response = await skillSet.editSkill(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
 //Allocation related
 router.get('/allocation/project', async (req, res) => {})
