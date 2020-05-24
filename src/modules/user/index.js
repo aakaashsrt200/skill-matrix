@@ -4,6 +4,7 @@ const login = require('./service/login')
 const password = require('./service/password')
 const profile = require('./service/profile')
 const skillSet = require('./service/skill-set')
+const allocation = require('./service/allocation')
 
 // Login and password-management related
 router.post('/auth/login', async (req, res) => {
@@ -137,13 +138,46 @@ router.post('/skill-set/add', async (req, res) => {
 })
 
 //Allocation related
-router.get('/allocation/project', async (req, res) => {})
+router.get('/allocation', async (req, res) => {
+	let response = await allocation.getProjects(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/allocation', async (req, res) => {})
+router.get('/allocation/projects', async (req, res) => {
+	console.log(111)
+	let response = await allocation.getUserProjects(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/allocation/edit', async (req, res) => {})
+router.post('/allocation/edit', async (req, res) => {
+	let response = await allocation.editProjects(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/allocation/delete', async (req, res) => {})
+router.post('/allocation/add', async (req, res) => {
+	let response = await allocation.addProjects(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/allocation/delete', async (req, res) => {
+	let response = await allocation.deleteProjects(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
 //certification related
 router.get('/cert/list', async (req, res) => {})

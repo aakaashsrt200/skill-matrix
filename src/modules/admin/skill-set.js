@@ -3,11 +3,13 @@ const exception = require('../../utility/CustomException')
 
 async function addSkill(request) {
 	try {
-		let details = []
+		let qList = []
 		for (let skill of request.skills) {
-			details.push([skill.domain, skill.skill])
+			var q = `CALL skill_matrix.sp_add_skill('${skill.domain}','${skill.skill}')`
+			qList.push(q)
 		}
-		await query.addSkills(details)
+		console.log(qList.join(';'))
+		await query.runCustomQuery(qList.join(';'))
 		return { status: true }
 	} catch (e) {
 		console.error(e)
@@ -22,6 +24,7 @@ async function deleteSkill(request) {
 			details.push([skillId])
 		}
 		let affectedRows = await query.deleteSkills(details)
+		console.log(details, affectedRows)
 		if (affectedRows > 0) {
 			await query.deleteUserSkillsBySkill(details)
 			return { status: true }

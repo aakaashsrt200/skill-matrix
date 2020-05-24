@@ -82,7 +82,7 @@ function getUserByUserId(userId) {
 }
 function getUserProfileForEditByUserId(userId) {
 	return new Promise(function (resolve, reject) {
-		let query = `select * from  skill_matrix.vw_profile_service_details a, skill_matrix.vw_lang_desig_coe_edu_concat b where a.user_id = ?;`
+		let query = `SELECT * from  skill_matrix.vw_profile_service_details a, skill_matrix.vw_lang_desig_coe_edu_concat b where a.user_id = ?;`
 		db.query(query, [userId], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -155,6 +155,18 @@ function getUserProfileByUserId(userId) {
 				return reject(err)
 			}
 			resolve(rows[0])
+		})
+	})
+}
+
+function getAllProfile() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_profile_service_details`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
 		})
 	})
 }
@@ -292,7 +304,7 @@ function runCustomQuery(query) {
 
 function addSkills(details) {
 	return new Promise(function (resolve, reject) {
-		let query = `INSERT INTO SKILL_MATRIX.skills (domain, skill) VALUES ?;`
+		let query = `CALL skill_matrix.sp_add_skill(?)`
 		db.query(query, [details], function (err, result) {
 			if (err) {
 				return reject(err)
@@ -314,6 +326,101 @@ function deleteSkills(details) {
 	})
 }
 
+function deleteUser(details) {
+	return new Promise(function (resolve, reject) {
+		var query = `DELETE FROM SKILL_MATRIX.user_details WHERE (user_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getProjects() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.projects;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function deleteProjects(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.projects WHERE (project_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserProjectsByProject(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.user_project WHERE (project_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getAllProject() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.projects`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getUserProject(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.vw_user_projects_transaction WHERE user_id = ?`
+		db.query(query, [userId], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getProjectByUserId(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT DISTINCT A.project, A.project_id FROM SKILL_MATRIX.projects A LEFT JOIN(SELECT * FROM SKILL_MATRIX.user_project WHERE USER_ID = ${userId}) B ON A.project_id = B.project_id WHERE B.project_id IS NULL;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function insertUserProjects(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `INSERT INTO SKILL_MATRIX.user_project (user_id, project, utilization, end_date) VALUES ?;`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
 module.exports = {
 	getUserByNameAndType,
 	saveNewPassword,
@@ -327,6 +434,7 @@ module.exports = {
 	getUserByUserIdAndOtp,
 	registerUserDetails,
 	getUserProfileByUserId,
+	getAllProfile,
 	getAllDomain,
 	getDomainByUserId,
 	getDomainAndSkill,
@@ -340,4 +448,12 @@ module.exports = {
 	runCustomQuery,
 	addSkills,
 	deleteSkills,
+	deleteUser,
+	getProjects,
+	deleteProjects,
+	deleteUserProjectsByProject,
+	getAllProject,
+	getProjectByUserId,
+	insertUserProjects,
+	getUserProject,
 }

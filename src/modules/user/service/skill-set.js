@@ -77,11 +77,12 @@ async function getUserSkill(userId) {
 
 async function addUserSkill(request) {
 	try {
-		let details = []
+		let qList = []
 		for (let skill of request.skills) {
-			details.push([request.user_id, skill.skill_id, skill.rating])
+			var q = `CALL skill_matrix.sp_add_user_skill(${skill.skill_id},${request.user_id},${skill.rating})`
+			qList.push(q)
 		}
-		await query.insertUserSkills(details)
+		await query.runCustomQuery(qList.join(';'))
 		return { status: true }
 	} catch (e) {
 		console.error(e)
@@ -95,11 +96,8 @@ async function deleteUserSkill(request) {
 		for (let skill_id of request.skills) {
 			details.push([request.user_id, skill_id])
 		}
-		let affectedRows = await query.deleteUserSkills(details)
-		if (affectedRows > 0) {
-			return { status: true }
-		}
-		return exception.InvalidSkillIdException
+		await query.deleteUserSkills(details)
+		return { status: true }
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException
@@ -113,11 +111,8 @@ async function alterUserSkill(request) {
 			var q = `UPDATE SKILL_MATRIX.user_skills set rating = ${skill.rating} WHERE user_id = ${request.user_id} and skill_id = '${skill.skill_id}'`
 			qList.push(q)
 		}
-		let affectedRows = await query.runCustomQuery(qList.join(';'))
-		if (affectedRows > 0) {
-			return { status: true }
-		}
-		return exception.InvalidSkillIdException
+		await query.runCustomQuery(qList.join(';'))
+		return { status: true }
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

@@ -6,14 +6,15 @@ async function getProfile(user_id) {
 	try {
 		let response = await query.getUserProfileByUserId(user_id)
 		if (response) {
-			//response.language_list = response.language_list.split(',')
-			response.language_list = response.language_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					language_id: e[0],
-					language: e[1],
-				}
-			})
+			if (response.language_list) {
+				response.language_list = response.language_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						language_id: e[0],
+						language: e[1],
+					}
+				})
+			}
 			return response
 		}
 		return exception.UserIdInvalidException
@@ -27,43 +28,53 @@ async function getProfileForEdit(user_id) {
 	try {
 		let response = await query.getUserProfileForEditByUserId(user_id)
 		if (response) {
-			response.language_list = response.language_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					language_id: e[0],
-					language: e[1],
-				}
-			})
-			let language_list = response.lang_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					language_id: e[0],
-					language: e[1],
-				}
-			})
-			let designation_list = response.des_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					designation_role_id: e[0],
-					designation: e[1],
-					role: e[2],
-				}
-			})
-			let coe_list = response.coe_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					coe_id: e[0],
-					coe: e[1],
-					practice: e[2],
-				}
-			})
-			let edu_list = response.edu_list.split(',').map((e) => {
-				e = e.split(':')
-				return {
-					education_id: e[0],
-					education_name: e[1],
-				}
-			})
+			if (response.language_list) {
+				response.language_list = response.language_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						language_id: e[0],
+						language: e[1],
+					}
+				})
+			}
+			if (response.lang_list) {
+				let language_list = response.lang_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						language_id: e[0],
+						language: e[1],
+					}
+				})
+			}
+			if (response.des_list) {
+				let designation_list = response.des_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						designation_role_id: e[0],
+						designation: e[1],
+						role: e[2],
+					}
+				})
+			}
+			if (response.coe_list) {
+				let coe_list = response.coe_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						coe_id: e[0],
+						coe: e[1],
+						practice: e[2],
+					}
+				})
+			}
+			if (response.edu_list) {
+				let edu_list = response.edu_list.split(',').map((e) => {
+					e = e.split(':')
+					return {
+						education_id: e[0],
+						education_name: e[1],
+					}
+				})
+			}
 			delete response.coe_list
 			delete response.des_list
 			delete response.lang_list
