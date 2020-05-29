@@ -5,6 +5,7 @@ const routes = require('./src/routes.js')
 const connection = require('./src/utility/GetDbConnection')
 const api = require('./src/utility/ApiKeyValidator')
 const exception = require('./src/utility/CustomException')
+const apiKey = require('./src/utility/GenerateApiKey')
 require('dotenv').config()
 
 var fileupload = require('express-fileupload')
@@ -15,22 +16,21 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 global.db = connection
 global.rootPath = __dirname
-//To implement api key
 /*
 app.use('*', async (req, res, next) => {
-	console.log(req)
-	console.log('URL - ', req.baseUrl)
-	console.log('Body - ', req.body)
-	if (!req.baseUrl.includes('profile_pic_')) {
-		let isValid = await api.validateKey(req.query.api_key)
-		if (!isValid) {
-			res.status(403)
-			res.json(exception.ApiKeyInvalidException)
+	try {
+		if (!req.baseUrl.includes('profile_pic_')) {
+			let isValid = await api.validateKey(req.query.api_key)
+			if (!isValid) {
+				res.status(403)
+				res.json(exception.ApiKeyInvalidException)
+			}
 		}
+		next()
+	} catch (e) {
+		res.json(exception.ApiKeyInvalidException)
 	}
-	next()
 })*/
-
 /*
 app.use('*', async (req, res, next) => {
 	console.log('---------------------------------------------------------------------------------------')
@@ -67,7 +67,6 @@ app.use('*', async (req, res, next) => {
 		const body = Buffer.concat(chunks).toString('utf8')
 		console.log('RESPONSE BODY : ', JSON.parse(body))
 		console.log('RESPONSE STATUS_CODE : ', res.statusCode)
-		console.log('RESPONSE STATUS_MESSAGE : ', res.statusMessage)
 		console.log('RESPONSE TIME : ', end - start)
 		console.log('---------------------------------------------------------------------------------------')
 		console.log('\n')
@@ -77,6 +76,20 @@ app.use('*', async (req, res, next) => {
 })*/
 app.use('/api/user', routes.user)
 app.use('/api/admin', routes.admin)
+app.use('/api/generate-api-key', async function (req, res) {
+	let key = await apiKey.generateApiKey(req.headers.authorization)
+	if (key) {
+		res.json({ api_key: key })
+	} else {
+		res.status(403)
+		res.json({
+			name: 'InvalidToken',
+			status: 403,
+			errorCode: 'INVALID_TOKEN',
+			errorMessage: 'Auth token is not valid',
+		})
+	}
+})
 app.listen(process.env.APPLICATION_PORT, () =>
 	console.log(`Skill-matrix app listening on port ${process.env.APPLICATION_PORT}!`)
 )

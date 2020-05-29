@@ -37,8 +37,9 @@ async function getProfileForEdit(user_id) {
 					}
 				})
 			}
+			let language_list = []
 			if (response.lang_list) {
-				let language_list = response.lang_list.split(',').map((e) => {
+				language_list = response.lang_list.split(',').map((e) => {
 					e = e.split(':')
 					return {
 						language_id: e[0],
@@ -46,8 +47,9 @@ async function getProfileForEdit(user_id) {
 					}
 				})
 			}
+			let designation_list = []
 			if (response.des_list) {
-				let designation_list = response.des_list.split(',').map((e) => {
+				designation_list = response.des_list.split(',').map((e) => {
 					e = e.split(':')
 					return {
 						designation_role_id: e[0],
@@ -56,8 +58,9 @@ async function getProfileForEdit(user_id) {
 					}
 				})
 			}
+			let coe_list = []
 			if (response.coe_list) {
-				let coe_list = response.coe_list.split(',').map((e) => {
+				coe_list = response.coe_list.split(',').map((e) => {
 					e = e.split(':')
 					return {
 						coe_id: e[0],
@@ -66,8 +69,9 @@ async function getProfileForEdit(user_id) {
 					}
 				})
 			}
+			let edu_list = []
 			if (response.edu_list) {
-				let edu_list = response.edu_list.split(',').map((e) => {
+				edu_list = response.edu_list.split(',').map((e) => {
 					e = e.split(':')
 					return {
 						education_id: e[0],
@@ -146,7 +150,7 @@ async function uploadDp(request, attachments) {
 	try {
 		let dpUrl = await saveProfilePictureAndGetURL(attachments, request.user_id)
 		if (!dpUrl) {
-			return exception.UserIdInvalidException //No attachments
+			return exception.AttachmentsNotFoundException
 		}
 		let affectedRows = await query.updateDp(request.user_id, dpUrl)
 		if (affectedRows == 1) {

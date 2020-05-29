@@ -5,7 +5,7 @@ class InvalidSkillIdException extends Error {
 		this.name = this.constructor.name
 		this.status = status || 403
 		this.errorCode = errorCode || ERROR_CODE.INVALID_SKILL_ID
-		this.errorMessage = errorMessage || 'Invalid Skill Is'
+		this.errorMessage = errorMessage || 'Invalid Skill Id'
 	}
 }
 module.exports = InvalidSkillIdException

@@ -2,27 +2,18 @@ const query = require('../../repository/query')
 const exception = require('../../utility/CustomException')
 require('dotenv').config()
 
-async function getProfile() {
+async function getProfile(userId) {
 	try {
-		let response = await query.getAllProfile()
-		var users = []
-		console.log(response)
-		if (response) {
-			for (let user of response) {
-				if (user.language_list) {
-					user.language_list = user.language_list.split(',').map((e) => {
-						e = e.split(':')
-						return {
-							language_id: e[0],
-							language: e[1],
-						}
-					})
-				}
-				users.push(user)
-			}
-			return { users: users }
+		console.log(userId)
+		if (userId) {
+			console.log(1)
+			let response = await query.getProfileByUserIdForAdmin(userId)
+			return response ? response : exception.UserIdInvalidException
+		} else {
+			console.log(2)
+			let response = await query.getAllProfileForAdmin()
+			return { users: response }
 		}
-		return exception.UserIdInvalidException
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

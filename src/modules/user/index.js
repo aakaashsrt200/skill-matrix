@@ -5,6 +5,7 @@ const password = require('./service/password')
 const profile = require('./service/profile')
 const skillSet = require('./service/skill-set')
 const allocation = require('./service/allocation')
+const certification = require('./service/certification')
 
 // Login and password-management related
 router.post('/auth/login', async (req, res) => {
@@ -180,12 +181,68 @@ router.post('/allocation/delete', async (req, res) => {
 })
 
 //certification related
-router.get('/cert/list', async (req, res) => {})
+router.get('/cert/domain', async (req, res) => {
+	let response = await certification.getAllDomain(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/cert/edit', async (req, res) => {})
+router.get('/cert/certificte', async (req, res) => {
+	let response = await certification.getCertification(req.query.domain, req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/cert/delete', async (req, res) => {})
+router.get('/cert/all', async (req, res) => {
+	let response = await certification.getDomainAndCertification(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
-router.get('/cert', async (req, res) => {})
+router.get('/cert', async (req, res) => {
+	let response = await certification.getCertification(req.query.domain, req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.get('/cert/user', async (req, res) => {
+	let response = await certification.getUserCertification(req.query.user_id)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/cert/edit', async (req, res) => {
+	let response = await certification.alterUserCertification(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/cert/delete', async (req, res) => {
+	let response = await certification.deleteUserCertification(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/cert/add', async (req, res) => {
+	let response = await certification.addUserCertification(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
 
 module.exports = router

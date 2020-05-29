@@ -38,4 +38,5 @@ async function validateKey(key) {
 
 module.exports = {
 	validateKey,
+	generateKey,
 }

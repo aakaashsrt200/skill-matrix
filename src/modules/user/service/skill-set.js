@@ -4,9 +4,9 @@ const query = require('../../../repository/query')
 async function getAllDomain(userId) {
 	try {
 		if (userId) {
-			result = await query.getDomainByUserId(userId)
+			result = await query.getSkillSetDomainByUserId(userId)
 		} else {
-			result = await query.getAllDomain()
+			result = await query.getAllSkillSetDomain()
 		}
 		let domainList = []
 		for (let domain of result) {

@@ -171,9 +171,9 @@ function getAllProfile() {
 	})
 }
 
-function getAllDomain() {
+function getAllProfileForAdmin() {
 	return new Promise(function (resolve, reject) {
-		let query = `SELECT * from vw_domain_list`
+		let query = `SELECT * from vw_profile_service_details_admin`
 		db.query(query, function (err, rows, fields) {
 			if (err) {
 				return reject(err)
@@ -183,7 +183,31 @@ function getAllDomain() {
 	})
 }
 
-function getDomainByUserId(userId) {
+function getProfileByUserIdForAdmin(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_profile_service_details_admin where user_id = ?`
+		db.query(query, [userId], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows[0])
+		})
+	})
+}
+
+function getAllSkillSetDomain() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_skillset_domain_list`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getSkillSetDomainByUserId(userId) {
 	return new Promise(function (resolve, reject) {
 		let query = `SELECT DISTINCT A.domain FROM SKILL_MATRIX.SKILLS A LEFT JOIN (SELECT * FROM SKILL_MATRIX.USER_SKILLS WHERE USER_ID = ${userId}) B ON A.SKILL_ID = B.SKILL_ID WHERE B.SKILL_ID IS NULL;`
 		db.query(query, function (err, rows, fields) {
@@ -421,6 +445,163 @@ function insertUserProjects(details) {
 		})
 	})
 }
+
+function deleteCertifications(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.certificates WHERE (certification_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getDomainAndCertificate() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.certificates;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getAllCertificationDomain() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_certification_domain_list`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getCertificationDomainByUserId(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT DISTINCT A.domain FROM SKILL_MATRIX.certificates A LEFT JOIN (SELECT * FROM SKILL_MATRIX.user_certification WHERE USER_ID = ${userId}) B ON A.certification_id = B.certification_id WHERE B.certification_id IS NULL;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getDomainAndCertificationByUserId(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT A.domain, A.certification, A.certification_id FROM SKILL_MATRIX.certificates A LEFT JOIN (SELECT * FROM SKILL_MATRIX.user_certification WHERE USER_ID = ${userId}) B ON A.certification_id = B.certification_id WHERE B.certification_id IS NULL;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getDomainAndCertification() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.certificates;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getCertificationByDomainRefAndUserId(domainRef, userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT A.certification, A.certification_id FROM SKILL_MATRIX.certificates A LEFT JOIN (SELECT * FROM SKILL_MATRIX.user_certification WHERE USER_ID = ${userId}) B ON A.certification_id = B.certification_id WHERE B.certification_id IS NULL AND A.DOMAIN='${domainRef}';`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getCertificationByDomainRef(domainRef) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT certification_id, certification FROM SKILL_MATRIX.certificates where domain = '${domainRef}';`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function getCertificationByUserId(userId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_user_certifications_transaction where user_id = ?`
+		db.query(query, [userId], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function insertUserCertifications(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `INSERT INTO SKILL_MATRIX.user_certification (user_id, certification_id, description) VALUES ?;`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserCertifications(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.user_certification WHERE (user_id,certification_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserCertificationsByCertificate(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.user_certification WHERE (certification_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getCertificationIdByDomainAndCertificate(domain, certification) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from certificates where domain = ? and certification = ?`
+		db.query(query, [domain, certification], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows[0])
+		})
+	})
+}
+
 module.exports = {
 	getUserByNameAndType,
 	saveNewPassword,
@@ -435,8 +616,8 @@ module.exports = {
 	registerUserDetails,
 	getUserProfileByUserId,
 	getAllProfile,
-	getAllDomain,
-	getDomainByUserId,
+	getAllSkillSetDomain,
+	getSkillSetDomainByUserId,
 	getDomainAndSkill,
 	getDomainAndSkillByUserId,
 	getSkillByDomainRef,
@@ -456,4 +637,19 @@ module.exports = {
 	getProjectByUserId,
 	insertUserProjects,
 	getUserProject,
+	deleteCertifications,
+	getDomainAndCertificate,
+	insertUserCertifications,
+	deleteUserCertifications,
+	getCertificationByUserId,
+	getCertificationByDomainRef,
+	getCertificationByDomainRefAndUserId,
+	getDomainAndCertification,
+	getDomainAndCertificationByUserId,
+	getCertificationDomainByUserId,
+	getAllCertificationDomain,
+	deleteUserCertificationsByCertificate,
+	getAllProfileForAdmin,
+	getProfileByUserIdForAdmin,
+	getCertificationIdByDomainAndCertificate,
 }
