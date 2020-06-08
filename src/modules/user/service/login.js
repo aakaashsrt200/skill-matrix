@@ -6,7 +6,6 @@ async function login(request) {
 	try {
 		let dbResponse = await query.getUserByUserName(request.username)
 		if (dbResponse) {
-			console.log(dbResponse)
 			if (pwd.validatePassword(request.password, dbResponse.password)) {
 				dbResponse.email_verified = dbResponse.email_verified == 0 ? false : true
 				delete dbResponse.password

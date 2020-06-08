@@ -1,5 +1,5 @@
-const query = require('../../repository/query')
-const exception = require('../../utility/CustomException')
+const query = require('../../../repository/query')
+const exception = require('../../../utility/CustomException')
 
 async function addProjects(request) {
 	try {

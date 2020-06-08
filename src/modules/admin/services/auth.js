@@ -1,7 +1,7 @@
-const query = require('../../repository/query')
-const exception = require('../../utility/CustomException')
-const pwd = require('../../utility/PasswordManager')
-const mailer = require('../../utility/Mailer')
+const query = require('../../../repository/query')
+const exception = require('../../../utility/CustomException')
+const pwd = require('../../../utility/PasswordManager')
+const mailer = require('../../../utility/Mailer')
 const fs = require('fs')
 const path = require('path')
 

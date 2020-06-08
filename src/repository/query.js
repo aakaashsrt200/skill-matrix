@@ -32,13 +32,14 @@ function setEmailVerifiedStatus(user_id) {
 
 function saveUserDetails(details) {
 	return new Promise(function (resolve, reject) {
-		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?,first_name = ?, last_name = ?, phone_number = ?, coe_id = ?, designation_role_id = ?, education_id = ?, profile_link = ?, dp_url = ?  WHERE user_id =?;`
+		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?,first_name = ?, last_name = ?, nickname =?, phone_number = ?, coe_id = ?, designation_role_id = ?, education_id = ?, profile_link = ?, dp_url = ?  WHERE user_id =?;`
 		db.query(
 			query,
 			[
 				details.bio_description,
 				details.first_name,
 				details.last_name,
+				details.nickname,
 				details.phone_number,
 				details.coe_id,
 				details.designation_role_id,
@@ -97,6 +98,18 @@ function getUserByUserName(userName) {
 	return new Promise(function (resolve, reject) {
 		let query = `SELECT * from vw_login_service_details where username = ?`
 		db.query(query, [userName], function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows[0])
+		})
+	})
+}
+
+function getUserByEmailId(emailId) {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * from vw_login_service_details where email_id = ?`
+		db.query(query, [emailId], function (err, rows, fields) {
 			if (err) {
 				return reject(err)
 			}
@@ -602,6 +615,18 @@ function getCertificationIdByDomainAndCertificate(domain, certification) {
 	})
 }
 
+function getAllAdminMailId() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT email_id from user_details where user_type = 'admin'`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
 module.exports = {
 	getUserByNameAndType,
 	saveNewPassword,
@@ -609,6 +634,7 @@ module.exports = {
 	getUserByUserId,
 	getUserProfileForEditByUserId,
 	getUserByUserName,
+	getUserByEmailId,
 	saveUserDetails,
 	updateDp,
 	saveOtp,
@@ -652,4 +678,5 @@ module.exports = {
 	getAllProfileForAdmin,
 	getProfileByUserIdForAdmin,
 	getCertificationIdByDomainAndCertificate,
+	getAllAdminMailId,
 }

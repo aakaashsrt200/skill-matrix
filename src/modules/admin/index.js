@@ -1,10 +1,10 @@
 const Router = require('express')
 const router = Router()
-const auth = require('./auth')
-const skillSet = require('./skill-set')
-const profile = require('./profile')
-const allocation = require('./allocation')
-const certification = require('./certification')
+const auth = require('./services/auth')
+const skillSet = require('./services/skill-set')
+const profile = require('./services/profile')
+const allocation = require('./services/allocation')
+const certification = require('./services/certification')
 
 // Login and user-creation related
 router.post('/auth/login', async (req, res) => {

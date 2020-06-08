@@ -1,5 +1,5 @@
-const query = require('../../repository/query')
-const exception = require('../../utility/CustomException')
+const query = require('../../../repository/query')
+const exception = require('../../../utility/CustomException')
 require('dotenv').config()
 
 async function getProfile(userId) {

@@ -90,6 +90,7 @@ app.use('/api/generate-api-key', async function (req, res) {
 		})
 	}
 })
+app.use('/api/pre-login', routes.preLogin)
 app.listen(process.env.APPLICATION_PORT, () =>
 	console.log(`Skill-matrix app listening on port ${process.env.APPLICATION_PORT}!`)
 )
