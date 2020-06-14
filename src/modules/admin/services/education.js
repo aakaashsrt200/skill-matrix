@@ -8,7 +8,7 @@ async function addEducation(request) {
 			var q = `CALL skill_matrix.sp_add_education('${education.degree}','${education.stream}')`
 			qList.push(q)
 		}
-		await query.runCustomQuery(qList.join(';'))
+		await query.runCustomQuery(qList.join(';')) 
 		return { status: true }
 	} catch (e) {
 		console.error(e)
