@@ -3,7 +3,7 @@ const router = Router()
 const signUp = require('./services/sign-up')
 
 // Signup
-router.post('/sign-up', async (req, res) => {
+router.post('/signup', async (req, res) => {
 	let response = await signUp.signUp(req.body)
 	if (response instanceof Error) {
 		res.status(response.status || 500)

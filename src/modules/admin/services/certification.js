@@ -25,9 +25,8 @@ async function deleteCertification(request) {
 		let affectedRows = await query.deleteCertifications(details)
 		if (affectedRows > 0) {
 			await query.deleteUserCertificationsByCertificate(details)
-			return { status: true }
 		}
-		return exception.InvalidCertificationIdException
+		return { status: true }
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

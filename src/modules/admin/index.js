@@ -5,6 +5,9 @@ const skillSet = require('./services/skill-set')
 const profile = require('./services/profile')
 const allocation = require('./services/allocation')
 const certification = require('./services/certification')
+const designationAndRole = require('./services/designation')
+const education = require('./services/education')
+const language = require('./services/language')
 
 // Login and user-creation related
 router.post('/auth/login', async (req, res) => {
@@ -141,6 +144,105 @@ router.post('/cert/delete', async (req, res) => {
 
 router.post('/cert/edit', async (req, res) => {
 	let response = await certification.editCertification(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+//Designation and Role related
+router.get('/desig-role/all', async (req, res) => {
+	let response = await designationAndRole.getDesignationAndRole(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/desig-role/add', async (req, res) => {
+	let response = await designationAndRole.addDesignationAndRole(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/desig-role/delete', async (req, res) => {
+	let response = await designationAndRole.deleteDesignationAndRole(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/desig-role/edit', async (req, res) => {
+	let response = await designationAndRole.editDesignationAndRole(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+//Education related
+router.get('/education/all', async (req, res) => {
+	let response = await education.getEducation(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/education/add', async (req, res) => {
+	let response = await education.addEducation(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/education/delete', async (req, res) => {
+	let response = await education.deleteEducation(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/education/edit', async (req, res) => {
+	let response = await education.editEducation(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+//Language related
+router.get('/language/all', async (req, res) => {
+	let response = await language.getLanguage(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/language/add', async (req, res) => {
+	let response = await language.addLanguage(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/language/delete', async (req, res) => {
+	let response = await language.deleteLanguage(req.body)
+	if (response instanceof Error) {
+		res.status(response.status || 500)
+	}
+	res.json(response)
+})
+
+router.post('/language/edit', async (req, res) => {
+	let response = await language.editLanguage(req.body)
 	if (response instanceof Error) {
 		res.status(response.status || 500)
 	}

@@ -627,6 +627,114 @@ function getAllAdminMailId() {
 	})
 }
 
+function deleteDesignationAndRole(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.designation WHERE (designation_role_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserDesignationAndRole(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `UPDATE SKILL_MATRIX.user_details SET designation_role_id = null WHERE (designation_role_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getDesignationAndRole() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.designation;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function deleteEducation(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.education WHERE (education_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserEducation(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `UPDATE SKILL_MATRIX.user_details SET education_id = null WHERE (education_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getEducation() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.education;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
+function deleteLanguage(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.languages WHERE (language_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function deleteUserLanguage(details) {
+	return new Promise(function (resolve, reject) {
+		let query = `DELETE FROM SKILL_MATRIX.user_language WHERE (language_id) IN (?);`
+		db.query(query, [details], function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(result.affectedRows)
+		})
+	})
+}
+
+function getLanguage() {
+	return new Promise(function (resolve, reject) {
+		let query = `SELECT * FROM SKILL_MATRIX.languages;`
+		db.query(query, function (err, rows, fields) {
+			if (err) {
+				return reject(err)
+			}
+			resolve(rows)
+		})
+	})
+}
+
 module.exports = {
 	getUserByNameAndType,
 	saveNewPassword,
@@ -679,4 +787,13 @@ module.exports = {
 	getProfileByUserIdForAdmin,
 	getCertificationIdByDomainAndCertificate,
 	getAllAdminMailId,
+	deleteDesignationAndRole,
+	deleteUserDesignationAndRole,
+	getDesignationAndRole,
+	deleteEducation,
+	deleteUserEducation,
+	getEducation,
+	deleteLanguage,
+	deleteUserLanguage,
+	getLanguage,
 }
