@@ -1,5 +1,5 @@
 const ERROR_CODE = require('./ErrorCodes')
-class UserNameAlreadyExistException extends Error {
+class EmailIdAlreadyExistException extends Error {
 	constructor(errorCode, errorMessage, status) {
 		super(errorMessage)
 		this.name = this.constructor.name
@@ -8,4 +8,4 @@ class UserNameAlreadyExistException extends Error {
 		this.errorMessage = errorMessage || 'User already exist'
 	}
 }
-module.exports = UserNameAlreadyExistException
+module.exports = EmailIdAlreadyExistException
