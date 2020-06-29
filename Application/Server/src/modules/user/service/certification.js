@@ -90,7 +90,7 @@ async function addUserCertification(request) {
 				certification.certification_id = result.certification_id
 			}
 			if (certification.certification_id) {
-				var insert = `CALL skill_matrix.sp_add_user_certification(${certification.certification_id},${request.user_id},${certification.description})`
+				var insert = `CALL skill_matrix.sp_add_user_certification(${certification.certification_id},${request.user_id},'${certification.description}')`
 				qList.push(insert)
 			}
 		}

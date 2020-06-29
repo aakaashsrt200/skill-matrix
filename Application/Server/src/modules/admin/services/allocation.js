@@ -45,13 +45,20 @@ async function getAllProjects() {
 
 async function editProjects(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let project of request.projects) {
-			var q = `UPDATE SKILL_MATRIX.projects set project = '${project.project}'WHERE project_id = ${project.project_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_project(${project.project_id},'${project.project}')`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			console.log(result)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(project)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+			duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

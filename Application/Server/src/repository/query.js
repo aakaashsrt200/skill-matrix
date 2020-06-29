@@ -31,6 +31,7 @@ function setEmailVerifiedStatus(user_id) {
 }
 
 function saveUserDetails(details) {
+	console.log(1,details.dp_url)
 	return new Promise(function (resolve, reject) {
 		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?,first_name = ?, last_name = ?, nickname =?, phone_number = ?, coe_id = ?, designation_role_id = ?, education_id = ?, profile_link = ?, dp_url = ?  WHERE user_id =?;`
 		db.query(
@@ -46,6 +47,34 @@ function saveUserDetails(details) {
 				details.education_id,
 				details.profile_link,
 				details.dp_url,
+				details.user_id,
+			],
+			function (err, result) {
+				if (err) {
+					return reject(err)
+				}
+				resolve(result.affectedRows)
+			}
+		)
+	})
+}
+
+function saveUserDetailsWithoutDpUrl(details) {
+	console.log(2,details.dp_url)
+	return new Promise(function (resolve, reject) {
+		var query = `UPDATE SKILL_MATRIX.user_details set bio_description = ?,first_name = ?, last_name = ?, nickname =?, phone_number = ?, coe_id = ?, designation_role_id = ?, education_id = ?, profile_link = ?  WHERE user_id =?;`
+		db.query(
+			query,
+			[
+				details.bio_description,
+				details.first_name,
+				details.last_name,
+				details.nickname,
+				details.phone_number,
+				details.coe_id,
+				details.designation_role_id,
+				details.education_id,
+				details.profile_link,
 				details.user_id,
 			],
 			function (err, result) {
@@ -335,6 +364,19 @@ function runCustomQuery(query) {
 				return reject(err)
 			}
 			resolve(result.affectedRows)
+		})
+	})
+}
+function runCustomQueryForEditStoreProcedures(query) {
+	return new Promise(function (resolve, reject) {
+		db.query(query, function (err, result) {
+			if (err) {
+				return reject(err)
+			}
+			/*var string=JSON.stringify(result)
+			var json =  JSON.parse(string)
+			console.log('>> status : ', json[0][0].status);*/
+			resolve(result)
 		})
 	})
 }
@@ -744,6 +786,7 @@ module.exports = {
 	getUserByUserName,
 	getUserByEmailId,
 	saveUserDetails,
+	saveUserDetailsWithoutDpUrl,
 	updateDp,
 	saveOtp,
 	getUserByUserIdAndOtp,
@@ -796,4 +839,5 @@ module.exports = {
 	deleteLanguage,
 	deleteUserLanguage,
 	getLanguage,
+	runCustomQueryForEditStoreProcedures,
 }

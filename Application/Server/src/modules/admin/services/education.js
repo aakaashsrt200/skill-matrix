@@ -45,13 +45,20 @@ async function getEducation() {
 
 async function editEducation(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let education of request.education) {
-			var q = `UPDATE SKILL_MATRIX.education set degree = '${education.degree}', stream = '${education.stream}' WHERE education_id = ${education.education_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_education(${education.education_id},'${education.degree}','${education.stream}');`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			console.log(result)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(education)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+		duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException
