@@ -45,13 +45,19 @@ async function getLanguage() {
 
 async function editLanguage(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let language of request.languages) {
-			var q = `UPDATE SKILL_MATRIX.languages set language_name = '${language.language_name}' WHERE language_id = ${language.language_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_language(${language.language_id},'${language.language_name}')`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(language)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+			duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

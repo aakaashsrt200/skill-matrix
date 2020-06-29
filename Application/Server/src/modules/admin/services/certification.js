@@ -45,13 +45,20 @@ async function getDomainAndCertification() {
 
 async function editCertification(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let certification of request.certifications) {
-			var q = `UPDATE SKILL_MATRIX.certificates set certification = '${certification.certification}', domain = '${certification.domain}' WHERE certification_id = ${certification.certification_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_certificates(${certification.certification_id},'${certification.domain}','${certification.certification}')`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			console.log(result)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(certification)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+			duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

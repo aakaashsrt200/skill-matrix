@@ -103,8 +103,7 @@ async function getProfileForEdit(user_id) {
 
 async function editProfile(request, attachments) {
 	try {
-		let dpUrl = await saveProfilePictureAndGetURL(attachments, request.user_id)
-		request.dp_url = dpUrl ? dpUrl : request.profile_picture_url
+		request.dp_url = await saveProfilePictureAndGetURL(attachments, request.user_id)
 		let language_list = request.language_list
 		delete request.language_list
 		let qList = []
@@ -114,7 +113,7 @@ async function editProfile(request, attachments) {
 			qList.push(q)
 		}
 		await query.runCustomQuery(qList.join(';'))
-		let affectedRows = await query.saveUserDetails(request)
+		let affectedRows = request.dp_url ? await query.saveUserDetails(request) : await query.saveUserDetailsWithoutDpUrl(request)
 		if (affectedRows == 1) {
 			let response = await query.getUserProfileByUserId(request.user_id)
 			if (response) {

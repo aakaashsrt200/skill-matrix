@@ -45,13 +45,20 @@ async function getDesignationAndRole() {
 
 async function editDesignationAndRole(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let desigRole of request.designationAndRoles) {
-			var q = `UPDATE SKILL_MATRIX.designation set designation = '${desigRole.designation}', current_role = '${desigRole.role}' WHERE designation_role_id = ${desigRole.designation_role_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_designation_role(${desigRole.designation_role_id},'${desigRole.designation}','${desigRole.role}')`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			console.log(result)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(desigRole)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+			duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

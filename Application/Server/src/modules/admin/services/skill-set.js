@@ -46,13 +46,19 @@ async function getDomainAndSkill() {
 
 async function editSkill(request) {
 	try {
-		let qList = []
+		let duplicateItems = []
 		for (let skill of request.skills) {
-			var q = `UPDATE SKILL_MATRIX.skills set skill = '${skill.skill}', domain = '${skill.domain}' WHERE skill_id = ${skill.skill_id}`
-			qList.push(q)
+			var q = `CALL skill_matrix.sp_edit_skill(${skill.skill_id},'${skill.domain}','${skill.skill}')`
+			let result = await query.runCustomQueryForEditStoreProcedures(q)
+			let resultString = JSON.stringify(result)
+			result= JSON.parse(resultString)
+			if(result[0][0].count !== 0){
+				duplicateItems.push(skill)
+			}
 		}
-		await query.runCustomQuery(qList.join(';'))
-		return { status: true }
+		return { status: true,
+			duplicateEntry : duplicateItems
+		}
 	} catch (e) {
 		console.error(e)
 		return exception.InternalServerException

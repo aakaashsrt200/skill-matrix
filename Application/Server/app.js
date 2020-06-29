@@ -6,16 +6,36 @@ const connection = require('./src/utility/GetDbConnection')
 const api = require('./src/utility/ApiKeyValidator')
 const exception = require('./src/utility/CustomException')
 const apiKey = require('./src/utility/GenerateApiKey')
+const https = require('https')
+const fs = require('fs')
+const fileupload = require('express-fileupload')
+
 require('dotenv').config()
 
-var fileupload = require('express-fileupload')
-app.use(fileupload())
+global.db = connection
+global.rootPath = __dirname
 
+app.use(fileupload())
+app.use(express.static('public'))
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-global.db = connection
-global.rootPath = __dirname
+app.use('/api/user', routes.user)
+app.use('/api/admin', routes.admin)
+app.use('/api/generate-api-key', async function (req, res) {
+	let key = await apiKey.generateApiKey(req.headers.authorization)
+	if (key) {
+		res.json({ api_key: key })
+	} else {
+		res.status(403)
+		res.json({
+			name: 'InvalidToken',
+			status: 403,
+			errorCode: 'INVALID_TOKEN',
+			errorMessage: 'Auth token is not valid',
+		})
+	}
+})
 /*
 app.use('*', async (req, res, next) => {
 	try {
@@ -74,23 +94,10 @@ app.use('*', async (req, res, next) => {
 	}
 	next()
 })*/
-app.use('/api/user', routes.user)
-app.use('/api/admin', routes.admin)
-app.use('/api/generate-api-key', async function (req, res) {
-	let key = await apiKey.generateApiKey(req.headers.authorization)
-	if (key) {
-		res.json({ api_key: key })
-	} else {
-		res.status(403)
-		res.json({
-			name: 'InvalidToken',
-			status: 403,
-			errorCode: 'INVALID_TOKEN',
-			errorMessage: 'Auth token is not valid',
-		})
-	}
-})
-app.use('/api/pre-login', routes.preLogin)
-app.listen(process.env.APPLICATION_PORT, () =>
-	console.log(`Skill-matrix app listening on port ${process.env.APPLICATION_PORT}!`)
-)
+https.createServer({
+	key: fs.readFileSync('server.key'),
+	cert: fs.readFileSync('server.cert')
+  }, app)
+  .listen(process.env.APPLICATION_PORT, function () {
+	console.log(`Skill-matrix app listening on port ${process.env.APPLICATION_PORT}!`)  })
+  
