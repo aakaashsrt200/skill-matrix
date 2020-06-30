@@ -1,0 +1,1 @@
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `skill_matrix`.`vw_certification_domain_list` AS select distinct `skill_matrix`.`certificates`.`domain` AS `domain` from `skill_matrix`.`certificates` order by `skill_matrix`.`certificates`.`domain`;

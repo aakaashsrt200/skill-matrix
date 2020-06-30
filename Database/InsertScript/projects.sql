@@ -1,0 +1,5 @@
+LOCK TABLES `projects` WRITE;
+
+INSERT INTO `projects` VALUES (5001,'Agios - PBCS Enhancements 2020'),(5002,'Agios - PBCS MSP'),(5003,'ATK - ATK Data Strategy'),(5004,'ATK - Dupont RPA Contract Extraction'),(5005,'ATK - Thyssenkrupp eContracts'),(5006,'Brighthouse - 2020 Managed Service (Infrastructure & Oversight)'),(5007,'Brown Advisory - MINT Enhancements'),(5008,'DJO 2020 DJOne Platform Foundation'),(5009,'DJO 2020 Infrastructure Support and Monitoring'),(5010,'Evolve Vacation Network - Enterprise MSP 2020'),(5011,'Infor - Talent Science Managed Services'),(5012,'RB Health - BAU - eCom360 (2020)'),(5013,'RB Health - BAU - SuperNova (2020)'),(5014,'RB Health - NA Retail & Distribution Analytics'),(5015,'RB Health - NAC Intelligent Forecast DE'),(5016,'RB Health - rbPulse - eCom360 Re-platform'),(5017,'RB Health - rbPulse - MENA Sell-In'),(5018,'RB Health - rbPulse Create'),(5019,'RB Health - Sales Cockpit - Phase 2'),(5020,'RB Health - Supernova Dev'),(5021,'RB Health : rbPulse - L4 Support'),(5022,'Sage Therapeutics - PBCS MSP'),(5023,'Topps - Hyperion MSP'),(5024,'Unifirst - Oracle PBCS Managed Service'),(5028,'Tested'),(5029,'TestedM');
+
+UNLOCK TABLES;

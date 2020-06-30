@@ -1,0 +1,1 @@
+CREATE DATABASE `skill_matrix` /*!40100 DEFAULT CHARACTER SET latin1 */;

@@ -1,0 +1,1 @@
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `skill_matrix`.`vw_user_skills_transaction` AS select `us`.`user_id` AS `user_id`,`us`.`skill_id` AS `skill_id`,`s`.`skill` AS `skill`,`s`.`domain` AS `domain`,`us`.`rating` AS `rating` from (`skill_matrix`.`user_skills` `us` join `skill_matrix`.`skills` `s` on((`us`.`skill_id` = `s`.`skill_id`)));

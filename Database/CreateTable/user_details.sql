@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS `user_details`;
+
+CREATE TABLE `user_details` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(25) NOT NULL,
+  `password` varchar(80) NOT NULL,
+  `email_id` varchar(50) NOT NULL,
+  `email_verified` tinyint(1) DEFAULT '0',
+  `created_by` varchar(25) DEFAULT 'admin-unknown',
+  `first_name` varchar(25) DEFAULT NULL,
+  `last_name` varchar(30) DEFAULT NULL,
+  `nickname` varchar(30) DEFAULT NULL,
+  `phone_number` char(10) DEFAULT NULL,
+  `coe_id` int(11) DEFAULT NULL,
+  `designation_role_id` int(11) DEFAULT NULL,
+  `bio_description` varchar(1000) DEFAULT NULL,
+  `education_id` int(11) DEFAULT NULL,
+  `profile_link` varchar(60) DEFAULT NULL,
+  `user_type` varchar(20) DEFAULT 'user',
+  `otp` varchar(20) DEFAULT NULL,
+  `dp_url` varchar(100) DEFAULT NULL,
+  `param1` varchar(100) DEFAULT NULL,
+  `param2` varchar(100) DEFAULT NULL,
+  `param3` varchar(100) DEFAULT NULL,
+  `param4` varchar(100) DEFAULT NULL,
+  `param5` int(11) DEFAULT NULL,
+  `param6` int(11) DEFAULT NULL,
+  `insert_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=90003 DEFAULT CHARSET=latin1;
