@@ -5,4 +5,4 @@ CREATE TABLE `user_language` (
   `user_id` int(11) DEFAULT NULL,
   `language_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`transaction_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9081 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=200001 DEFAULT CHARSET=latin1;

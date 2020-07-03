@@ -6,4 +6,4 @@ CREATE TABLE `certificates` (
   `certification` varchar(100) DEFAULT NULL,
   `created_by` varchar(100) DEFAULT 'ADMIN',
   PRIMARY KEY (`certification_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8000 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40001 DEFAULT CHARSET=latin1;
