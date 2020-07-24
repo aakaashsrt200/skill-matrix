@@ -5,4 +5,4 @@ CREATE TABLE `education` (
   `degree` varchar(100) DEFAULT NULL,
   `stream` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`education_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=60001 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=70001 DEFAULT CHARSET=latin1;
